@@ -43,7 +43,6 @@ public class KnowledgeBase {
       
       sentenceStrings = tellString.split(";");
     } catch (IOException e) {
-      // TODO Auto-generated catch block
       e.printStackTrace();
       System.exit(2);
     }

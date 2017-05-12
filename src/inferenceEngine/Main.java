@@ -37,7 +37,6 @@ public class Main {
       
       kb.printSentenceStrings();
     } catch (FileNotFoundException e) {
-      // TODO Auto-generated catch block
       e.printStackTrace();
       System.exit(1);
     }
