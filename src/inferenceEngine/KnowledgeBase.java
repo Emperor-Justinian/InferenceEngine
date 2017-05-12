@@ -5,22 +5,29 @@ package inferenceEngine;
 
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.util.ArrayList;
 
 /**
  * @author andrew
  *
  */
 public class KnowledgeBase {
-  String[] sentenceStrings;
+  //String[] sentenceStrings;
+  private ArrayList<HornClause> clauses;
+  private ArrayList<String> facts;
   
   /**
    * 
    */
   public KnowledgeBase() {
-    // TODO Auto-generated constructor stub
+    clauses = new ArrayList<HornClause>();
+    facts = new ArrayList<String>();
   }
   
   public KnowledgeBase(BufferedReader reader) {
+    clauses = new ArrayList<HornClause>();
+    facts = new ArrayList<String>();
+    
     readInput(reader);
   }
   
@@ -41,7 +48,15 @@ public class KnowledgeBase {
        */
       tellString = tellString.replaceAll("\\s", "");
       
-      sentenceStrings = tellString.split(";");
+      String[] sentenceStrings = tellString.split(";");
+      
+      for (int i = 0; i < sentenceStrings.length; i++) {
+        if (sentenceStrings[i].contains("=>")) {
+          clauses.add(new HornClause(sentenceStrings[i]));
+        } else {
+          facts.add(sentenceStrings[i]);
+        }
+      }
     } catch (IOException e) {
       e.printStackTrace();
       System.exit(2);
@@ -50,16 +65,43 @@ public class KnowledgeBase {
     return reader;
   }
   
-  public void printSentenceStrings() {
-    int sentences = sentenceStrings.length;
+  @Override
+  public String toString() {
+    String returnString = "";
     
-    System.out.println("Printing " + String.valueOf(sentences) + " sentences...");;
+    int count = clauses.size();
     
-    for (int i = 0; i < sentences; i++) {
-      System.out.println(sentenceStrings[i]);
+    /*
+     * Credit to
+     * http://stackoverflow.com/questions/207947/how-do-i-get-a-platform-dependent-new-line-character
+     * for suggesting the use of System.lineSeparator().
+     */
+    
+    returnString += "Printing " + String.valueOf(count) + " Horn clauses...";
+    returnString += System.lineSeparator();
+    
+    for (int i = 0; i < count; i++) {
+      returnString += clauses.get(i);
+      returnString += System.lineSeparator();
     }
     
-    System.out.println("Printed " + String.valueOf(sentences) + " sentences.");
+    returnString += "Printed " + String.valueOf(count) + " Horn clauses.";
+    returnString += System.lineSeparator();
+    
+    count = facts.size();
+    
+    returnString += "Printing " + String.valueOf(count) + " facts...";
+    returnString += System.lineSeparator();
+    
+    for (int i = 0; i < count; i++) {
+      returnString += facts.get(i);
+      returnString += System.lineSeparator();
+    }
+    
+    returnString += "Printed " + String.valueOf(count) + " facts.";
+    returnString += System.lineSeparator();
+    
+    return returnString;
   }
 
 }
