@@ -35,9 +35,8 @@ public class Main {
       
       KnowledgeBase kb = new KnowledgeBase(inputFile);
       
-      kb.printSentenceStrings();
+      System.out.println(kb);
     } catch (FileNotFoundException e) {
-      // TODO Auto-generated catch block
       e.printStackTrace();
       System.exit(1);
     }
