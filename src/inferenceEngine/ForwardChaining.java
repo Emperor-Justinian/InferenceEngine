@@ -1,34 +1,35 @@
 import java.util.ArrayList;
 import java.util.LinkedList;
 
-public class ForwardChaining {
+public class ForwardChaining extends Algorithm {
 	/**
 	 * @author Tim
-	 * Written on 17/ 05/ 17
+	 *
 	 */
 	
 	private KnowledgeBase aKnowledgeBase;
 	private ArrayList<HornClause> clauses;
 	private ArrayList<String> facts;
 	private ArrayList<String> outputFacts;
-	private String askSymbol;
+	private String query;
 	
-	ForwardChaining() {
-		
-		aKnowledgeBase = new KnowledgeBase();
-		
-		clauses = aKnowledgeBase.getClauses();
-	    facts = aKnowledgeBase.getFacts();
-	    askSymbol = aKnowledgeBase.getAskString();
-	    
-	    outputFacts = new ArrayList<String>();
+	public ForwardChaining(KnowledgeBase aKb, String aToAsk) {
+    super(aKb, aToAsk);
+    
+    clauses = aKb.getClauses();
+	facts = aKb.getFacts();
+	query = aToAsk;
+
+	outputFacts = new ArrayList<String>();
+
+    setCode("FC");
 	}
 	
 	public String Solve(){
 		
 		String output = "";
 		
-		// CheckFacts check's whether the propositon symbol can be proven 
+		// CheckFacts check's whether the query can be proven 
 		
 		if ( CheckFacts() )
 		{
@@ -45,9 +46,9 @@ public class ForwardChaining {
 		
 		else
 		{
-			// else output "(Proposition symbol) could not be proven"
+			// else output "(Query) could not be proven"
 			
-			output = askSymbol + " could not be proven.";
+			output = query + " could not be proven.";
 		}
 		
 		return output;		
@@ -70,7 +71,7 @@ public class ForwardChaining {
 			// if the current fact matches the proposition symbol,  
 			// then it has been successfully proven, and the search is over
 			
-			if ( aFact.equals( askSymbol ) )
+			if ( aFact.equals( query ) )
 			{
 				return true;
 			}
