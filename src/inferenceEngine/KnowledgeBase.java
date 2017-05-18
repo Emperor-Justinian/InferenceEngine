@@ -65,6 +65,14 @@ public class KnowledgeBase {
     return reader;
   }
   
+  public ArrayList<HornClause> getClauses() {
+    return clauses;
+  }
+  
+  public ArrayList<String> getFacts() {
+    return facts;
+  }
+  
   @Override
   public String toString() {
     String returnString = "";
