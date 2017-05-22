@@ -1,55 +1,216 @@
-/**
- * 
- */
-package inferenceEngine;
+import java.util.ArrayList;
+import java.util.LinkedList;
 
-/**
- * @author andrew
- *
- */
 public class TruthTable extends Algorithm {
+	/**
+	 * @author Tim
+	 *
+	 */
+	
+	private ArrayList<HornClause> clauses;
+	private ArrayList<String> facts;
+	private String query;
 
-  /**
-   * 
-   */
-  public TruthTable() {
-    setCode("TT");
-  }
-
-  /**
-   * @param aKb
-   * @param aToAsk
-   */
-  public TruthTable(KnowledgeBase aKb, String aToAsk) {
+	private ArrayList<String> variables;
+	private int colNums;
+	private int rowNums;
+	private boolean[][] grid;
+	private boolean[] formulaColumn;
+	private int[][] literalIndex;
+	private int[] factIndex;
+	private int[] entailed;
+	private int count;
+	
+	public TruthTable(KnowledgeBase aKb, String aToAsk) {
     super(aKb, aToAsk);
     
-    setCode("TT");
-  }
-  
-  private boolean testClause(HornClause clause) {
-    
-    
-    return false; //TODO
-  }
-  
-  /* (non-Javadoc)
-   * @see inferenceEngine.Algorithm#testAskStatement()
-   */
-  @Override
-  public boolean testAskStatement() {
-    /*
-    // Initialise loop conditions
-    boolean result = true;
-    int currentIndex = 0;
-    
-    do {
-      result = testClause(getKnowledgeBase().getClauses().get(currentIndex));
-      currentIndex++;
-    } while (result && currentIndex < getKnowledgeBase().getClauses().size());
-     */
-    
-    // Stub return value, to be replaced once implementation of this method is complete
-    return false; // TODO
-  }
+	    clauses = aKb.getClauses();
+		facts = aKb.getFacts();
+		query = aToAsk;
 
+		getVariables();
+
+		// one column for every literal
+		colNums = variables.size();
+
+		// 2 to the power of n rows equals the number of variables squared
+		rowNums = ( ( int ) Math.pow( 2, ( variables.size() ) );
+
+		// stores the boolean value of each variable in a row
+		// each row contains an array of boolean values for each variable
+		grid = new boolean[rowNums][colNums];
+
+		// a final column that determines the result of each row
+		formulaColumn = new boolean[rowNums];
+
+		literalIndex = new boolean[clauses.size()][2];
+
+		factIndex = new boolean[facts.size()];
+
+		entailed = new int[clauses.size];
+
+		count = 0;
+
+		PopulateGrid();
+
+		GetColumnIndexOfFacts();
+
+		NumberOfLiteralsInClause();
+
+	    setCode("TT");
+
+	}
+	
+	public String Solve(){
+		
+		String output = "";
+		
+		// CheckFacts check's whether the query can be proven 
+		if ( CheckFacts() )
+		{
+			// if so, output YES:
+			output = "YES " + count;
+		}
+		
+		else
+		{
+			// else output "(Query) could not be proven"
+			output = query + " could not be proven.";
+		}
+		
+		return output;		
+	}
+
+	public bool CheckFacts()
+	{
+		for ( int i = 0; i < rowNums; i++ )
+		{
+			for ( int j = 0; j < literalIndex.length; j++ )
+			{
+				formulaColumn[i] = grid[i][factIndex[j]];
+			}
+		}
+
+		for ( int i = 0; i < rowNums; i++ )
+		{
+			if ( formulaColumn[i] )
+			{
+				for ( int j = 0; j < literalIndex.length; j++ )
+				{
+					if ( literalIndex[j].length == 1 )
+					{
+						if ( ( grid[i][literalIndex[j][0]] == true ) && ( grid[i][entailed] == false) )
+						{
+							formulaColumn[i] = false;
+						}
+					}
+					else
+					{
+						if ( ( grid[i][literalIndex[j][0]] == true ) && ( grid[i][literalIndex[j][1]] == true )
+							&& ( grid[i][entailed] == false) )
+						{
+							formulaColumn[i] = false;
+						}
+					}
+				}
+			}
+		}
+
+		for ( int i = 0; i < formulaColumn.length; i++ )
+		{
+			if(formulaColumn[i])
+			{
+				count++;
+			}
+		}
+
+		if (count != 0)
+		{
+			return true;
+		}
+
+		return false;
+	}
+
+	public void getVariables()
+	{
+		// add every literal from every horn clause into the list of variables
+		for ( int i = 0; i < clauses.size(); i++ )
+		{
+			for ( int j = 0; j < variables.size(); j++ )
+			{
+				for ( int k = 0; k < clauses.get(k).literalCount(); k++ )
+				{
+					// make sure each literal is only included once
+					if ( ! variables.contains( clauses.get(j).getLiteralsAtIndex(k) ) )
+					{
+						// add literals from left of the entailment
+						variables.add( clauses.get(j).getLiteralsAtIndex(k) );
+					}
+				}
+				if ( ! variables.contains( clauses.get(j).getEntailedLiteral() ) )
+				{
+					// add literals from right of the entailment
+					variables.add( clauses.get(j).getEntailedLiteral() );
+				}
+			}
+		}
+	}
+
+	public void PopulateGrid()
+	{
+		// reference: https://www.careercup.com/question?id=17632666
+
+		for (int i = 0; i < rowNums; i++)
+		{
+			for (int j = 0; j < colNums; j++)
+			{
+				int v = i & 1 << colNums - 1 - j;
+
+				grid[i][j] = (v == 0 ? true : false);
+			}
+		}
+	}
+
+	public void GetColumnIndexOfFacts()
+	{
+		for ( int i = 0; i < facts.size(); i++ )
+		{
+			for ( int j = 0; j < variables.size(); j++ )
+			{
+				if ( facts.get(i).equals( variables.get(j) ) )
+				{
+					factIndex[i] = j;
+				}
+			}
+		}
+	}
+
+	public void NumberOfLiteralsInClause()
+	{
+		for ( int i = 0; i < clauses.size(); i++ )
+		{
+			for ( int j = 0; j < clauses.get(i).literalCount(); j++ )
+			{
+				for ( int k = 0; k < variables.size(); k++ )
+				{
+					if ( clauses.get(i).getLiteralsAtIndex(j).equals( variables.get(k) ) )
+					{
+						literalIndex[i][j] = k;
+					}
+
+					if ( clauses.get(i).getEntailedLiteral().equals( variables.get(k) ) )
+					{
+						entailed[i] = k;
+					}
+				}
+			}
+		}
+	}
 }
+
+
+
+
+
+

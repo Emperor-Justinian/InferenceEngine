@@ -7,23 +7,26 @@ public class BackwardChaining extends Algorithm {
 	 *
 	 */
 	
-	private KnowledgeBase aKnowledgeBase;
 	private ArrayList<HornClause> clauses;
 	private ArrayList<String> facts;
-	private ArrayList<String> queries;
-	private ArrayList<String> outputQueries;
 	private String query;
+
+	private ArrayList<String> output;
+	private ArrayList<String> queries;
+	
+	
 	
 	public BackwardChaining(KnowledgeBase aKb, String aToAsk) {
     super(aKb, aToAsk);
-    
-    clauses = aKb.getClauses();
-	facts = aKb.getFacts();
-	query = aToAsk;
+    	
+    	clauses = aKb.getClauses();
+		facts = aKb.getFacts();
+		query = aToAsk;
 
-	outputQueries = new ArrayList<String>();
+		output = new ArrayList<String>();
 
-    setCode("BC");
+    	setCode("BC");
+
 	}
 	
 	public String Solve(){
@@ -41,7 +44,7 @@ public class BackwardChaining extends Algorithm {
 			
 			for ( int i = 0; i < outputFacts.size(); i++ )
 			{
-				output += ( outputQueries.get(i) + ", " );
+				output += ( output.get(i) + ", " );
 			}
 		}
 		
@@ -71,7 +74,7 @@ public class BackwardChaining extends Algorithm {
 
 			// add it to the list of queries that will be used to output (if true)
 
-			outputQueries.push( currentQuery );
+			output.push( currentQuery );
 
 			// Compare currentQuery with every fact in Facts:
 			// if it matches a fact then the current loop can end
@@ -100,9 +103,9 @@ public class BackwardChaining extends Algorithm {
 	
 	public boolean CompareToFacts( String aQuery )
 	{
-		for ( int i = 0; i < facts[i].size(); i++ )
+		for ( int i = 0; i < facts.size(); i++ )
 		{
-			if ( aQuery.equals( facts[i] ) )
+			if ( aQuery.equals( facts.get(i) ) )
 			{
 				return true;
 			}
@@ -117,13 +120,13 @@ public class BackwardChaining extends Algorithm {
 
 		for ( int i = 0; i < clauses.size(); i++ )
 		{
-			if ( aQuery.equals( clauses[i].getEntailedLiteral() ) )
+			if ( aQuery.equals( clauses.get(i).getEntailedLiteral() ) )
 			{
 				result = true;
 
-				for ( int j = 0; j < clauses[i].literalCount(); j++ )
+				for ( int j = 0; j < clauses.get(i).literalCount(); j++ )
 				{
-					queries.push( clauses[i].getLiteralsAtIndex(j) );
+					queries.push( clauses.get(i).getLiteralsAtIndex(j) );
 				}
 			}
 		}

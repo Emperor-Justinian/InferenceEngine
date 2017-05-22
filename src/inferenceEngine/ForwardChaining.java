@@ -7,22 +7,23 @@ public class ForwardChaining extends Algorithm {
 	 *
 	 */
 	
-	private KnowledgeBase aKnowledgeBase;
 	private ArrayList<HornClause> clauses;
 	private ArrayList<String> facts;
-	private ArrayList<String> outputFacts;
 	private String query;
+
+	private ArrayList<String> output;
 	
 	public ForwardChaining(KnowledgeBase aKb, String aToAsk) {
     super(aKb, aToAsk);
     
-    clauses = aKb.getClauses();
-	facts = aKb.getFacts();
-	query = aToAsk;
+	    clauses = aKb.getClauses();
+		facts = aKb.getFacts();
+		query = aToAsk;
 
-	outputFacts = new ArrayList<String>();
+		output = new ArrayList<String>();
 
-    setCode("FC");
+	    setCode("FC");
+
 	}
 	
 	public String Solve(){
@@ -38,9 +39,9 @@ public class ForwardChaining extends Algorithm {
 			
 			// as well as each fact that is discovered
 			
-			for ( int i = 0; i < outputFacts.size(); i++ )
+			for ( int i = 0; i < output.size(); i++ )
 			{
-				output += ( outputFacts.get(i) + ", " );
+				output += ( output.get(i) + ", " );
 			}
 		}
 		
@@ -66,7 +67,7 @@ public class ForwardChaining extends Algorithm {
 			
 			// add it to the list of facts that will be used to output (if true)
 			
-			outputFacts.addLast( aFact );
+			output.addLast( aFact );
 			
 			// if the current fact matches the proposition symbol,  
 			// then it has been successfully proven, and the search is over
@@ -81,11 +82,11 @@ public class ForwardChaining extends Algorithm {
 			
 			for ( int i = 0; i < clauses.size(); i++ )
 			{
-				for ( int j = 0; j < clauses[i].literalCount(); j++ )
+				for ( int j = 0; j < clauses.get(i).literalCount(); j++ )
 				{
-					if ( aFact.equals( clauses[i].getLiteralsAtIndex(j) ) )
+					if ( aFact.equals( clauses.get(i).getLiteralsAtIndex(j) ) )
 					{
-						clauses[i].remove(aFact);
+						clauses.get(i).remove(aFact);
 					}
 				}
 			}
@@ -99,7 +100,7 @@ public class ForwardChaining extends Algorithm {
 			{
 				if ( clauses[i].literalCount() == 0 )
 				{
-					facts.addLast( clauses[i].getEntailedLiteral() );
+					facts.addLast( clauses.get(i).getEntailedLiteral() );
 					
 					clauses.remove(i);
 				}

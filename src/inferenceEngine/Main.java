@@ -13,18 +13,10 @@ import java.io.IOException;
  *
  */
 public class Main {
-
-  /**
-   * 
-   */
-  public Main() {
-    // TODO Auto-generated constructor stub
-  }
-
   /**
    * @param args
    */
-  public static void main(String[] args) {
+  public static void Main(String[] args) {
     try {
       /*
        * Note that args[0] is the algorithm to use, and args[1] is the path to the input file.
