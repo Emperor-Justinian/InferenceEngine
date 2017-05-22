@@ -16,7 +16,7 @@ public class Main {
   /**
    * @param args
    */
-  public static void Main(String[] args) {
+  public static void main(String[] args) {
     try {
       /*
        * Note that args[0] is the algorithm to use, and args[1] is the path to the input file.
@@ -41,6 +41,8 @@ public class Main {
       
       // This array should contain an instance of each subclass of Algorithm
       Algorithm[] algorithms = {
+    		  new ForwardChaining(kb, askStatement),
+    		  new BackwardChaining(kb, askStatement),
           new TruthTable(kb, askStatement)
       };
       
@@ -60,6 +62,7 @@ public class Main {
         currentIndex++;
       } while (currentIndex < algorithms.length && searchingForAlgorithm);
     } catch (FileNotFoundException e) {
+    	
       e.printStackTrace();
       System.exit(1);
     } catch (IOException e) {

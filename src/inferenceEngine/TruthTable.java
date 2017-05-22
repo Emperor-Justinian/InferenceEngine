@@ -1,5 +1,6 @@
+package inferenceEngine;
+
 import java.util.ArrayList;
-import java.util.LinkedList;
 
 public class TruthTable extends Algorithm {
 	/**
@@ -21,33 +22,39 @@ public class TruthTable extends Algorithm {
 	private int[] entailed;
 	private int count;
 	
+	public TruthTable()
+	{
+	    setCode("TT");
+	}
+	
 	public TruthTable(KnowledgeBase aKb, String aToAsk) {
     super(aKb, aToAsk);
     
 	    clauses = aKb.getClauses();
 		facts = aKb.getFacts();
 		query = aToAsk;
-
+		
+		variables = new ArrayList<String>();
 		getVariables();
 
 		// one column for every literal
 		colNums = variables.size();
 
 		// 2 to the power of n rows equals the number of variables squared
-		rowNums = ( ( int ) Math.pow( 2, ( variables.size() ) );
+		rowNums = ( ( int ) Math.pow( 2, ( variables.size() ) ) );
 
 		// stores the boolean value of each variable in a row
 		// each row contains an array of boolean values for each variable
-		grid = new boolean[rowNums][colNums];
+		grid = new boolean[ rowNums ][ colNums ];
 
 		// a final column that determines the result of each row
-		formulaColumn = new boolean[rowNums];
+		formulaColumn = new boolean[ rowNums ];
 
-		literalIndex = new boolean[clauses.size()][2];
+		literalIndex = new int [ clauses.size() ][ 2 ];
 
-		factIndex = new boolean[facts.size()];
+		factIndex = new int [ facts.size() ];
 
-		entailed = new int[clauses.size];
+		entailed = new int[ clauses.size() ];
 
 		count = 0;
 
@@ -58,11 +65,11 @@ public class TruthTable extends Algorithm {
 		NumberOfLiteralsInClause();
 
 	    setCode("TT");
-
 	}
 	
-	public String Solve(){
-		
+	@Override
+	public String testAskStatement()
+	{
 		String output = "";
 		
 		// CheckFacts check's whether the query can be proven 
@@ -78,10 +85,11 @@ public class TruthTable extends Algorithm {
 			output = query + " could not be proven.";
 		}
 		
-		return output;		
+		return output;			
 	}
 
-	public bool CheckFacts()
+	@Override
+	public boolean CheckFacts()
 	{
 		for ( int i = 0; i < rowNums; i++ )
 		{
@@ -99,15 +107,17 @@ public class TruthTable extends Algorithm {
 				{
 					if ( literalIndex[j].length == 1 )
 					{
-						if ( ( grid[i][literalIndex[j][0]] == true ) && ( grid[i][entailed] == false) )
+						if ( ( grid[i][ literalIndex[j][0] ] == true ) && 
+								( grid[i][ entailed[j] ] == false) )
 						{
 							formulaColumn[i] = false;
 						}
 					}
 					else
 					{
-						if ( ( grid[i][literalIndex[j][0]] == true ) && ( grid[i][literalIndex[j][1]] == true )
-							&& ( grid[i][entailed] == false) )
+						if ( ( grid[i][ literalIndex[j][0] ] == true ) && 
+								( grid[i][literalIndex[j][1]] == true ) && 
+								( grid[i][entailed[j]] == false) )
 						{
 							formulaColumn[i] = false;
 						}
@@ -137,22 +147,27 @@ public class TruthTable extends Algorithm {
 		// add every literal from every horn clause into the list of variables
 		for ( int i = 0; i < clauses.size(); i++ )
 		{
-			for ( int j = 0; j < variables.size(); j++ )
+			for ( int j = 0; j < clauses.get(i).literalCount(); j++ )
 			{
-				for ( int k = 0; k < clauses.get(k).literalCount(); k++ )
-				{
-					// make sure each literal is only included once
-					if ( ! variables.contains( clauses.get(j).getLiteralsAtIndex(k) ) )
-					{
-						// add literals from left of the entailment
-						variables.add( clauses.get(j).getLiteralsAtIndex(k) );
-					}
+				// make sure each literal is only included once
+				if ( variables.equals( clauses.get(i).getLiteralsAtIndex(j) ) )
+				{	
+					// do nothing
 				}
-				if ( ! variables.contains( clauses.get(j).getEntailedLiteral() ) )
+				else
 				{
-					// add literals from right of the entailment
-					variables.add( clauses.get(j).getEntailedLiteral() );
+					// add literals from left of the entailment
+					variables.add( clauses.get(i).getLiteralsAtIndex(j) );
 				}
+			}
+			if ( variables.equals( clauses.get(i).getEntailedLiteral() ) )
+			{	
+				// do nothing
+			}
+			else
+			{
+				// add literals from right of the entailment
+				variables.add( clauses.get(i).getEntailedLiteral() );
 			}
 		}
 	}
