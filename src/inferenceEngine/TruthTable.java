@@ -1,6 +1,8 @@
 package inferenceEngine;
 
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Set;
 
 public class TruthTable extends Algorithm {
 	/**
@@ -8,40 +10,41 @@ public class TruthTable extends Algorithm {
 	 *
 	 */
 	
-	private ArrayList<HornClause> clauses;
-	private ArrayList<String> facts;
+	private ArrayList < HornClause > clauses;
+	private ArrayList < String > facts;
 	private String query;
 
-	private ArrayList<String> variables;
+	private ArrayList < String > variables;
 	private int colNums;
 	private int rowNums;
-	private boolean[][] grid;
-	private boolean[] formulaColumn;
-	private int[][] literalIndex;
-	private int[] factIndex;
-	private int[] entailed;
+	private boolean[ ][ ] grid;
+	private boolean[ ] formulaColumn;
+	private int[ ][ ] literalIndex;
+	private int[ ] factIndex;
+	private int[ ] entailed;
 	private int count;
 	
-	public TruthTable()
+	public TruthTable( )
 	{
 	    setCode("TT");
 	}
 	
-	public TruthTable(KnowledgeBase aKb, String aToAsk) {
-    super(aKb, aToAsk);
+	public TruthTable( KnowledgeBase aKb, String aToAsk ) {
+    super( aKb, aToAsk );
     
-	    clauses = aKb.getClauses();
-		facts = aKb.getFacts();
+	    clauses = aKb.getClauses( );
+		facts = aKb.getFacts( );
 		query = aToAsk;
 		
-		variables = new ArrayList<String>();
-		getVariables();
-
+		variables = new ArrayList< String > ( );
+		
+		getVariables( );
+		Set<String> hs = new HashSet<>();
 		// one column for every literal
-		colNums = variables.size();
+		colNums = variables.size( );
 
 		// 2 to the power of n rows equals the number of variables squared
-		rowNums = ( ( int ) Math.pow( 2, ( variables.size() ) ) );
+		rowNums = ( ( int ) Math.pow ( 2, ( variables.size( ) ) ) );
 
 		// stores the boolean value of each variable in a row
 		// each row contains an array of boolean values for each variable
@@ -49,34 +52,43 @@ public class TruthTable extends Algorithm {
 
 		// a final column that determines the result of each row
 		formulaColumn = new boolean[ rowNums ];
+		
+		for ( int i = 0; i < rowNums; i++ )
+		{
+			formulaColumn[ i ] = true;
+		}
 
-		literalIndex = new int [ clauses.size() ][ 2 ];
+		literalIndex = new int[ clauses.size( ) ][ 2 ];
 
-		factIndex = new int [ facts.size() ];
+		factIndex = new int[ facts.size( ) ];
 
-		entailed = new int[ clauses.size() ];
+		entailed = new int[ clauses.size( ) ];
 
 		count = 0;
 
-		PopulateGrid();
+		PopulateGrid( );
 
-		GetColumnIndexOfFacts();
+		// get the column index for every fact in the TT grid
+		GetColumnIndexOfFacts( );
+		
+		// get the column index for every literal in the TT grid
+		GetColumnIndexOfLiterals( );
+		
+		System.out.println(variables.size( ));
 
-		NumberOfLiteralsInClause();
-
-	    setCode("TT");
+	    setCode( "TT" );
 	}
 	
 	@Override
-	public String testAskStatement()
+	public String testAskStatement( )
 	{
 		String output = "";
 		
 		// CheckFacts check's whether the query can be proven 
-		if ( CheckFacts() )
+		if ( CheckFacts( ) )
 		{
 			// if so, output YES:
-			output = "YES " + count;
+			output = "YES: " + count;
 		}
 		
 		else
@@ -89,143 +101,131 @@ public class TruthTable extends Algorithm {
 	}
 
 	@Override
-	public boolean CheckFacts()
+	public boolean CheckFacts( )
 	{
+		// check the state of each fact for every row: if any of the facts
+		//  in a row are false then the entire row is automatically false
 		for ( int i = 0; i < rowNums; i++ )
 		{
-			for ( int j = 0; j < literalIndex.length; j++ )
+			for ( int j = 0; j < factIndex.length; j++ )
 			{
-				formulaColumn[i] = grid[i][factIndex[j]];
-			}
-		}
-
-		for ( int i = 0; i < rowNums; i++ )
-		{
-			if ( formulaColumn[i] )
-			{
-				for ( int j = 0; j < literalIndex.length; j++ )
+				// make sure that any false rows don't get rewritten
+				if ( formulaColumn[ i ] )
 				{
-					if ( literalIndex[j].length == 1 )
-					{
-						if ( ( grid[i][ literalIndex[j][0] ] == true ) && 
-								( grid[i][ entailed[j] ] == false) )
-						{
-							formulaColumn[i] = false;
-						}
-					}
-					else
-					{
-						if ( ( grid[i][ literalIndex[j][0] ] == true ) && 
-								( grid[i][literalIndex[j][1]] == true ) && 
-								( grid[i][entailed[j]] == false) )
-						{
-							formulaColumn[i] = false;
-						}
-					}
+					formulaColumn[ i ] = grid[ i ][  factIndex [ j ]  ];
+				}
+				else
+				{
+					break;
 				}
 			}
 		}
 
-		for ( int i = 0; i < formulaColumn.length; i++ )
+		// now check the state of each literal for every row
+		for ( int i = 0; i < rowNums; i++ )
 		{
-			if(formulaColumn[i])
+			// make sure that any false rows don't get rewritten
+			if ( formulaColumn[ i ] )
+			{
+				for ( int j = 0; j < literalIndex.length; j++ )
+				{
+					if ( ( grid[ i ][  literalIndex[ j ][ 0 ]  ] == true ) && 
+							( grid[ i ][  literalIndex[ j ][ 1 ]  ] == true ) && 
+							( grid[ i ][  entailed[ j ]  ] == false ) )
+					{
+						formulaColumn[ i ] = false;
+					}
+				}
+			}
+		}
+		// count the number of rows that are true
+		for ( int i = 0; i < colNums; i++ )
+		{
+			if ( formulaColumn[ i ] )
 			{
 				count++;
 			}
 		}
-
-		if (count != 0)
+		// if there is at least one true row, then return true
+		if ( count > 0 )
 		{
 			return true;
 		}
-
+		// else return false
 		return false;
 	}
 
-	public void getVariables()
+	public void getVariables( )
 	{
 		// add every literal from every horn clause into the list of variables
-		for ( int i = 0; i < clauses.size(); i++ )
+		for ( int i = 0; i < clauses.size( ); i++ )
 		{
-			for ( int j = 0; j < clauses.get(i).literalCount(); j++ )
+			for ( int j = 0; j < clauses.get( i ).literalCount( ); j++ )
 			{
-				// make sure each literal is only included once
-				if ( variables.equals( clauses.get(i).getLiteralsAtIndex(j) ) )
-				{	
-					// do nothing
-				}
-				else
-				{
 					// add literals from left of the entailment
-					variables.add( clauses.get(i).getLiteralsAtIndex(j) );
-				}
+					variables.add( clauses.get( i ).getLiteralsAtIndex( j ) );
 			}
-			if ( variables.equals( clauses.get(i).getEntailedLiteral() ) )
-			{	
-				// do nothing
-			}
-			else
-			{
-				// add literals from right of the entailment
-				variables.add( clauses.get(i).getEntailedLiteral() );
-			}
+			// add literals from right of the entailment
+			variables.add( clauses.get( i ).getEntailedLiteral( ) );
 		}
+		// Credit to jonathan-stafford's answer at 
+		// stackoverflow.com/questions/203984/how-do-i-remove-repeated-elements-from-arraylist
+		// for an example of how to populate a truth table grid
+		Set<String> hs = new HashSet<>();
+		hs.addAll(variables);
+		variables.clear();
+		variables.addAll(hs);
+		
 	}
-
-	public void PopulateGrid()
+	
+	public void PopulateGrid( )
 	{
-		// reference: https://www.careercup.com/question?id=17632666
-
-		for (int i = 0; i < rowNums; i++)
+		// Credit to Dhass's answer at careercup.com/question?id=17632666
+		// for an example of how to populate a truth table grid
+		for ( int i = 0; i < rowNums; i++ )
 		{
-			for (int j = 0; j < colNums; j++)
+			for ( int j = 0; j < colNums; j++ )
 			{
 				int v = i & 1 << colNums - 1 - j;
 
-				grid[i][j] = (v == 0 ? true : false);
+				grid[ i ][ j ] = ( v == 0 ? true : false );
 			}
 		}
 	}
 
-	public void GetColumnIndexOfFacts()
+	public void GetColumnIndexOfFacts( )
 	{
-		for ( int i = 0; i < facts.size(); i++ )
+		for ( int i = 0; i < facts.size( ); i++ )
 		{
-			for ( int j = 0; j < variables.size(); j++ )
+			for ( int j = 0; j < variables.size( ); j++ )
 			{
-				if ( facts.get(i).equals( variables.get(j) ) )
+				if ( facts.get( i ).equals( variables.get( j ) ) )
 				{
-					factIndex[i] = j;
+					factIndex[ i ] = j;
 				}
 			}
 		}
 	}
 
-	public void NumberOfLiteralsInClause()
+	public void GetColumnIndexOfLiterals( )
 	{
-		for ( int i = 0; i < clauses.size(); i++ )
+		for ( int i = 0; i < variables.size( ); i++ )
 		{
-			for ( int j = 0; j < clauses.get(i).literalCount(); j++ )
+			for ( int j = 0; j < clauses.size( ); j++ )
 			{
-				for ( int k = 0; k < variables.size(); k++ )
+				for ( int k = 0; k < clauses.get( j ).literalCount( ); k++ )
 				{
-					if ( clauses.get(i).getLiteralsAtIndex(j).equals( variables.get(k) ) )
+					if ( clauses.get( j ).getLiteralsAtIndex( k ).equals( variables.get( i ) ) )
 					{
-						literalIndex[i][j] = k;
+						literalIndex[ j ][ k ] = i;
 					}
-
-					if ( clauses.get(i).getEntailedLiteral().equals( variables.get(k) ) )
-					{
-						entailed[i] = k;
-					}
+				}
+				
+				if ( clauses.get( j ).getEntailedLiteral( ).equals( variables.get( i ) ) )
+				{
+					entailed[ j ] = i;
 				}
 			}
 		}
 	}
 }
-
-
-
-
-
-
