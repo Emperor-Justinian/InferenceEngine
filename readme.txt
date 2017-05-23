@@ -25,3 +25,7 @@ Here is a more specific summary of each member's contributions:
 * Tim did online research into how to implement truth tables, forward chaining and backward chaining.
 * Andrew implemented the Main class, the KnowledgeBase and HornClause classes, and the abstract Algorithm class.
 * Tim implemented the TruthTable, ForwardChaining and BackwardChaining classes.
+
+**Andrew's contribution**: 50%
+
+**Tim's contribution**: 50%
