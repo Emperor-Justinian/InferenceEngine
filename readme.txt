@@ -1,12 +1,9 @@
 # InferenceEngine
 COS30019 - Assignment 2 - Inference Engine
 
-## TODO
-Tim - Insert your student ID into the "Student Details" section below
-
 ## Student Details
 * Andrew Piubellini (9988416)
-* Timothy Quill (TODO)
+* Timothy Quill (100997474)
 
 ## Features/Bugs/Missing
 TODO
