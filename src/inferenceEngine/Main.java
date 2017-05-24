@@ -13,14 +13,6 @@ import java.io.IOException;
  *
  */
 public class Main {
-
-  /**
-   * 
-   */
-  public Main() {
-    // TODO Auto-generated constructor stub
-  }
-
   /**
    * @param args
    */
@@ -49,6 +41,8 @@ public class Main {
       
       // This array should contain an instance of each subclass of Algorithm
       Algorithm[] algorithms = {
+    		  new ForwardChaining(kb, askStatement),
+    		  new BackwardChaining(kb, askStatement),
           new TruthTable(kb, askStatement)
       };
       
@@ -61,13 +55,14 @@ public class Main {
           // We found the correct algorithm, so the search is over
           searchingForAlgorithm = false;
           
-          System.out.println("Result of query:");
+          System.out.println("Result of " + algorithms[currentIndex].getLongName() + " search:");
           System.out.println(algorithms[currentIndex].testAskStatement());
         }
         
         currentIndex++;
       } while (currentIndex < algorithms.length && searchingForAlgorithm);
     } catch (FileNotFoundException e) {
+    	
       e.printStackTrace();
       System.exit(1);
     } catch (IOException e) {
