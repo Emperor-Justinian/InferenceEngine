@@ -28,6 +28,11 @@ d
 FC output: NO
 BC output: NO
 TT output: YES: 5
+*** a bug was discovered! *** The output should be “NO”. It was discovered that this was because the truth table was returning true when the query was satisfiable, rather than being valid.
+This was resolved by:
+1 - for every row in which the query was false, the entire row is false.
+2 - for each row comparing the result of the query with the KB, if the query is false in the same column that the KB is true then the program returns a result of “NO”. With this new addition to the code the program produced the correct output:
+TT output: NO: d could not be proven
 
 * Test Case #3 - when the query is a fact
 TELL
