@@ -18,10 +18,12 @@ public class TruthTable extends Algorithm {
 	private int colNums;
 	private int rowNums;
 	private boolean[ ][ ] grid;
-	private boolean[ ] formulaColumn;
+	private boolean[ ] formulaResult;
 	private int[ ][ ] literalIndex;
 	private int[ ] factIndex;
 	private int[ ] entailed;
+	private boolean[ ] queryResult;
+	private int queryIndex;
 	private int count;
 	
 	public TruthTable( )
@@ -53,11 +55,11 @@ public class TruthTable extends Algorithm {
 		grid = new boolean[ rowNums ][ colNums ];
 
 		// a final column that determines the result of each row
-		formulaColumn = new boolean[ rowNums ];
+		formulaResult = new boolean[ rowNums ];
 		
 		for ( int i = 0; i < rowNums; i++ )
 		{
-			formulaColumn[ i ] = true;
+			formulaResult[ i ] = true;
 		}
 
 		literalIndex = new int[ clauses.size( ) ][ 2 ];
@@ -65,6 +67,10 @@ public class TruthTable extends Algorithm {
 		factIndex = new int[ facts.size( ) ];
 
 		entailed = new int[ clauses.size( ) ];
+		
+		queryResult = new boolean[ rowNums ];
+		
+		queryIndex = 0;
 
 		count = 0;
 
@@ -96,7 +102,7 @@ public class TruthTable extends Algorithm {
 		else
 		{
 			// else output "(Query) could not be proven"
-			output = query + " could not be proven.";
+			output = "NO: " + query + " could not be proven.";
 		}
 		
 		return output;			
@@ -112,9 +118,23 @@ public class TruthTable extends Algorithm {
 			for ( int j = 0; j < factIndex.length; j++ )
 			{
 				// make sure that any false rows don't get rewritten
-				if ( formulaColumn[ i ] )
+				if ( formulaResult[ i ] )
 				{
-					formulaColumn[ i ] = grid[ i ][  factIndex [ j ]  ];
+					// if the query is false, the whole row is false
+					if ( ! grid[ i ][ queryIndex ] )
+					{
+						formulaResult[ i ] = false;
+						
+						queryResult[ i ] = false;
+						
+						break;
+					}
+					else
+					{
+						queryResult[ i ] = true;
+					}
+					
+					formulaResult[ i ] = grid[ i ][  factIndex [ j ]  ];
 				}
 				else
 				{
@@ -127,7 +147,7 @@ public class TruthTable extends Algorithm {
 		for ( int i = 0; i < rowNums; i++ )
 		{
 			// make sure that any false rows don't get rewritten
-			if ( formulaColumn[ i ] )
+			if ( formulaResult[ i ] )
 			{
 				for ( int j = 0; j < literalIndex.length; j++ )
 				{
@@ -137,7 +157,7 @@ public class TruthTable extends Algorithm {
 								( grid[ i ][  literalIndex[ j ][ 1 ]  ] == true ) && 
 								( grid[ i ][  entailed[ j ]  ] == false ) )
 						{
-							formulaColumn[ i ] = false;
+							formulaResult[ i ] = false;
 						}
 					}
 					else
@@ -145,27 +165,31 @@ public class TruthTable extends Algorithm {
 						if ( ( grid[ i ][  literalIndex[ j ][ 0 ]  ] == true ) && 
 								( grid[ i ][  entailed[ j ]  ] == false ) )
 						{
-							formulaColumn[ i ] = false;
+							formulaResult[ i ] = false;
 						}
 					}
 				}
 			}
 		}
+		
 		// count the number of rows that are true
 		for ( int i = 0; i < rowNums; i++ )
 		{
-			if ( formulaColumn[ i ] )
+			if ( formulaResult[ i ] )
 			{
 				count++;
 			}
+			
+			// the only way the search can return false is if
+			// KB ⊨ α if and only if (KB ^ ¬α) is unsatisfiable
+			if ( queryResult[ i ] == false && formulaResult[ i ] == true )
+			{
+				return false;
+			}
 		}
-		// if there is at least one true row, then return true
-		if ( count > 0 )
-		{
-			return true;
-		}
-		// else return false
-		return false;
+		
+		// else return true
+		return true;
 	}
 
 	public void getVariables( )
@@ -216,6 +240,13 @@ public class TruthTable extends Algorithm {
 				{
 					factIndex[ i ] = j;
 				}
+				
+				// get the index of the query
+				if ( query.equals( variables.get( j ) ) )
+				{
+					queryIndex = j;
+				}
+				
 			}
 		}
 	}
