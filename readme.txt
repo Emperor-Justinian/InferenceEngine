@@ -54,7 +54,8 @@ ASK
 g
 FC output: YES: a, h, j, i, f, b, c, d, e, g
 BC output: YES: h, h, i, i, b, b, a, j, d, c, f, e, g
-*** a bug was discovered! *** It is incorrect because the search explored some of the literals (h, i, and b) multiple times, which is an unnecessary expense. The cause of the error was identified as relating to when a literal appears in two different horn clauses on the left side of the entailment. In this case it was b, which appeared in a&b => c and b => d.
+*** a bug was discovered! *** The output is incorrect because the search explored some of the literals (h, i, and b) multiple times, which is an unnecessary expense.
+The cause of the error was identified as relating to when a literal appears in two different horn clauses on the left side of the entailment. In this case it was b, which appeared in a&b => c and b => d.
 To solve this problem, a small function was written that checks if a newly discovered literal has already been discovered before, and if so, ignores it. With this new addition to the code the program produced the correct output:
 BC output: YES: h, i, b, a, j, d, c, f, e, g
 TT output: YES: 1
