@@ -18,6 +18,8 @@ public class BackwardChaining extends Algorithm {
 	public BackwardChaining()
 	{
 		setCode("BC");
+		
+		setLongName("Backward Chaining");
 	}
 	
 	public BackwardChaining(KnowledgeBase aKb, String aToAsk) {
@@ -31,6 +33,8 @@ public class BackwardChaining extends Algorithm {
 		outputFacts = new ArrayList<String>();
 	
 	    	setCode("BC");
+	    	
+	    	setLongName("Backward Chaining");
 	}
 	
 	@Override
@@ -73,7 +77,7 @@ public class BackwardChaining extends Algorithm {
 		while ( queries.size() > 0 )
 		{
 			// take the first query off of queries to be checked 
-			String currentQuery = queries.remove(queries.size() - 1);
+			String currentQuery = queries.remove(0);
 
 			// add it to the list of queries that will be used to output (if true)
 			outputFacts.add( currentQuery );
@@ -126,6 +130,19 @@ public class BackwardChaining extends Algorithm {
 				}
 			}
 		}
+		
+		// this method stops BC from reassessing literals that have already been explored
+		for ( int i = 0; i < outputFacts.size(); i++ )
+		{
+			for ( int j = 0; j < queries.size(); j++ )
+			{
+				if ( outputFacts.get(i).equals( queries.get(j) ) )
+				{
+					queries.remove(j);
+				}
+			}
+		}
+		
 		return result;
 	}
 }

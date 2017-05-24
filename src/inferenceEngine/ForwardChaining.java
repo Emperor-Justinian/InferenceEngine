@@ -17,6 +17,8 @@ public class ForwardChaining extends Algorithm {
 	public ForwardChaining()
 	{
 		setCode("FC");
+		
+		setLongName("Forward Chaining");
 	}
 	
 	public ForwardChaining(KnowledgeBase aKb, String aToAsk) {
@@ -29,6 +31,8 @@ public class ForwardChaining extends Algorithm {
 		outputFacts = new ArrayList<String>();
 
 	    setCode("FC");
+	    
+	    setLongName("Forward Chaining");
 	}
 	
 	@Override

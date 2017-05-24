@@ -27,6 +27,8 @@ public class TruthTable extends Algorithm {
 	public TruthTable( )
 	{
 	    setCode("TT");
+	    
+	    setLongName("Truth Table");
 	}
 	
 	public TruthTable( KnowledgeBase aKb, String aToAsk ) {
@@ -39,7 +41,7 @@ public class TruthTable extends Algorithm {
 		variables = new ArrayList< String > ( );
 		
 		getVariables( );
-		Set<String> hs = new HashSet<>();
+
 		// one column for every literal
 		colNums = variables.size( );
 
@@ -73,10 +75,10 @@ public class TruthTable extends Algorithm {
 		
 		// get the column index for every literal in the TT grid
 		GetColumnIndexOfLiterals( );
-		
-		System.out.println(variables.size( ));
 
 	    setCode( "TT" );
+	    
+	    setLongName("Truth Table");
 	}
 	
 	@Override
@@ -129,17 +131,28 @@ public class TruthTable extends Algorithm {
 			{
 				for ( int j = 0; j < literalIndex.length; j++ )
 				{
-					if ( ( grid[ i ][  literalIndex[ j ][ 0 ]  ] == true ) && 
-							( grid[ i ][  literalIndex[ j ][ 1 ]  ] == true ) && 
-							( grid[ i ][  entailed[ j ]  ] == false ) )
+					if( clauses.get(j).literalCount() == 2 )
 					{
-						formulaColumn[ i ] = false;
+						if ( ( grid[ i ][  literalIndex[ j ][ 0 ]  ] == true ) && 
+								( grid[ i ][  literalIndex[ j ][ 1 ]  ] == true ) && 
+								( grid[ i ][  entailed[ j ]  ] == false ) )
+						{
+							formulaColumn[ i ] = false;
+						}
+					}
+					else
+					{
+						if ( ( grid[ i ][  literalIndex[ j ][ 0 ]  ] == true ) && 
+								( grid[ i ][  entailed[ j ]  ] == false ) )
+						{
+							formulaColumn[ i ] = false;
+						}
 					}
 				}
 			}
 		}
 		// count the number of rows that are true
-		for ( int i = 0; i < colNums; i++ )
+		for ( int i = 0; i < rowNums; i++ )
 		{
 			if ( formulaColumn[ i ] )
 			{
@@ -162,15 +175,15 @@ public class TruthTable extends Algorithm {
 		{
 			for ( int j = 0; j < clauses.get( i ).literalCount( ); j++ )
 			{
-					// add literals from left of the entailment
-					variables.add( clauses.get( i ).getLiteralsAtIndex( j ) );
+				// add literals from left of the entailment
+				variables.add( clauses.get( i ).getLiteralsAtIndex( j ) );
 			}
 			// add literals from right of the entailment
 			variables.add( clauses.get( i ).getEntailedLiteral( ) );
 		}
 		// Credit to jonathan-stafford's answer at 
 		// stackoverflow.com/questions/203984/how-do-i-remove-repeated-elements-from-arraylist
-		// for an example of how to populate a truth table grid
+		// for an example of how to use a hash-set to cleanse an array-list of duplicate values
 		Set<String> hs = new HashSet<>();
 		hs.addAll(variables);
 		variables.clear();

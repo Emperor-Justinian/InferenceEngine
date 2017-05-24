@@ -55,7 +55,7 @@ public class Main {
           // We found the correct algorithm, so the search is over
           searchingForAlgorithm = false;
           
-          System.out.println("Result of query:");
+          System.out.println("Result of " + algorithms[currentIndex].getLongName() + " search:");
           System.out.println(algorithms[currentIndex].testAskStatement());
         }
         

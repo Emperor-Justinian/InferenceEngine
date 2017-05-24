@@ -9,6 +9,7 @@ package inferenceEngine;
  */
 public abstract class Algorithm {
   private String code;
+  private String longName;
   private KnowledgeBase kb;
   private String toAsk;
   
@@ -29,6 +30,16 @@ public abstract class Algorithm {
   protected void setCode(String aCode)
   {
 	  code = aCode;
+  }
+  
+  public String getLongName()
+  {
+	  return longName;
+  }
+	  
+  protected void setLongName(String aLongName)
+  {
+	  longName = aLongName;
   }
 	  
   protected KnowledgeBase getKnowledgeBase()
