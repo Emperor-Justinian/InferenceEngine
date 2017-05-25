@@ -106,10 +106,10 @@ BC: no output was returned
 
 *** a bug was discovered! ***
 
-The bug was caused by this horn-clause: e&f => f, which can only be proven by proving itself.
-This caused the program to get stuck in an infinite loop as it constantly added and removed itself off of the queries array-list.
-This error was solved by creating a method that checks if a literal has been added before, and if so, ignoring it.
-The new output is:
+The bug was caused by this horn-clause: e&f => f, which requires f to be proven by itself.
+This caused the program to get stuck in an infinite loop as it constantly added and removed f from the queries array-list.
+This error was solved by creating a method that checks if a literal has been added before, and if so, ignores it.
+With this addition to the program, the new output is:
 
 BC output: YES: j, h, i, f, d, b, a, c, e, g
 
