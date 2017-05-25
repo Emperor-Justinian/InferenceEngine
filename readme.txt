@@ -37,7 +37,9 @@ BC output: NO
 
 TT output: YES: 5
 
-**a bug was discovered!** The output should be “NO”. It was discovered that this was because the truth table was returning true when the query was satisfiable, rather than being valid.
+**a bug was discovered!**
+
+The output should be “NO”. It was discovered that this was because the truth table was returning true when the query was satisfiable, rather than being valid.
 
 This was resolved by:
 
@@ -80,17 +82,40 @@ FC output: YES: a, h, j, i, f, b, c, d, e, g
 
 BC output: YES: h, h, i, i, b, b, a, j, d, c, f, e, g
 
-**a bug was discovered!** The output is incorrect because the search explored some of the literals (h, i, and b) multiple times, which is an unnecessary expense.
+**a bug was discovered!**
+
+The output is incorrect because the search explored some of the literals (h, i, and b) multiple times, which is an unnecessary expense.
 
 The cause of the error was identified as relating to when a literal appears in two different horn clauses on the left side of the entailment. In this case it was b, which appeared in a&b => c and b => d.
 
 To solve this problem, a small function was written that checks if a newly discovered literal has already been discovered before, and if so, ignores it. With this new addition to the code the program produced the correct output:
 
-BC output: YES: h, i, b, a, j, d, c, f, e, g
+BC output: YES: j, h, i, f, d, b, a, c, e, g
 
 TT output: YES: 1
 
-### Test Case #6 - using the example from the assignment outline
+* Test Case #6 - an entailed literal is entailed by itself
+TELL
+a&b => c; c&d = > e; e&f => g; e&f => f; h => i; i =>b; b => d; j => f; a; h; j;
+ASK
+g
+
+FC: YES: a, h, j, i, f, b, c, d, e, g
+
+BC: no output was returned
+
+*** a bug was discovered! ***
+
+The bug was caused by this horn-clause: e&f => f, which can only be proven by proving itself.
+This caused the program to get stuck in an infinite loop as it constantly added and removed itself off of the queries array-list.
+This error was solved by creating a method that checks if a literal has been added before, and if so, ignoring it.
+The new output is:
+
+BC output: YES: j, h, i, f, d, b, a, c, e, g
+
+TT output: YES: 1
+
+* Test Case #7 - using the example from the assignment outline
 TELL
 p2=> p3; p3 => p1; c => e; b&e => f; f&g => h; p1=>d; p1&p3 => c; a; b; p2;
 ASK
@@ -101,6 +126,7 @@ FC output: YES: a, b, p2, p3, p1, d
 BC output: YES: p2, p3, p1, d
 
 TT output: YES: 3
+
 
 ## Acknowledgements/Resources
 
