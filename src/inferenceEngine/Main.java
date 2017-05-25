@@ -9,7 +9,7 @@ import java.io.FileReader;
 import java.io.IOException;
 
 /**
- * @author andrew
+ * @author Andrew Piubellini
  *
  */
 public class Main {
@@ -28,6 +28,11 @@ public class Main {
       
       KnowledgeBase kb = new KnowledgeBase(inputFile);
       
+      /*
+       * Print the contents of the KnowledgeBase
+       * (useful to understand how the KnowledgeBase class works,
+       * and to check that it is working correctly).
+       */
       System.out.println(kb);
       
       /*

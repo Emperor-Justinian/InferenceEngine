@@ -6,7 +6,7 @@ package inferenceEngine;
 import java.util.LinkedList;
 
 /**
- * @author andrew
+ * @author Andrew Piubellini
  *
  */
 public class HornClause {
@@ -14,7 +14,9 @@ public class HornClause {
   private String entailedLiteral;
   
   /**
+   * Constructs a new HornClause, based on the String provided in the sentence parameter.
    * 
+   * @param sentence A String representing the new HornClause.
    */
   public HornClause(String sentence) {
     literals = new LinkedList<String>();
@@ -30,10 +32,22 @@ public class HornClause {
     entailedLiteral = splitByEntailment[1];
   }
   
+  /**
+   * Returns a LinkedList of String, containing the literals that the HornClause refers to
+   * (excluding the entailed literal).
+   * 
+   * @return A LinkedList of String, containing the literals that the HornClause refers to.
+   */
   public LinkedList<String> getLiterals() {
     return literals;
   }
   
+  /**
+   * Returns the literal (represented as a String) at a given index.
+   * 
+   * @param index The index from which to get the literal.
+   * @return The literal (represented as a String).
+   */
   public String getLiteralsAtIndex(int index) {
     try {
       if (index >= 0 && index < literals.size()) {
@@ -50,14 +64,32 @@ public class HornClause {
     }
   }
   
+  /**
+   * Returns the number of literals that the HornClause refers to (excluding the entailed literal).
+   * 
+   * @return The number of literals that the HornClause refers to (excluding the entailed literal).
+   */
   public int literalCount() {
     return literals.size();
   }
   
+  /**
+   * Checks if the HornClause refers to a given literal. If so, removes that reference.
+   * 
+   * <p>Note that this method is not capable of removing multiple instances of the same literal.
+   * As such, you should not add multiple instances of the same literal to a HornClause.
+   * 
+   * @param literal The literal to check for and remove.
+   */
   public void removeLiteral(String literal) {
     literals.remove(literal);
   }
   
+  /**
+   * Returns the literal (represented as a String) that the HornClause entails.
+   * 
+   * @return The literal (represented as a String) that the HornClause entails.
+   */
   public String getEntailedLiteral() {
     return entailedLiteral;
   }

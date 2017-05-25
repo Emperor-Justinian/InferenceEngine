@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 public class ForwardChaining extends Algorithm {
 	/**
-	 * @author Tim
+	 * @author Timothy Quill
 	 *
 	 */
 	
