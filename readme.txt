@@ -94,7 +94,7 @@ BC output: YES: j, h, i, f, d, b, a, c, e, g
 
 TT output: YES: 1
 
-* Test Case #6 - an entailed literal is entailed by itself
+### Test Case #6 - an entailed literal is entailed by itself
 TELL
 a&b => c; c&d = > e; e&f => g; e&f => f; h => i; i =>b; b => d; j => f; a; h; j;
 ASK
@@ -104,18 +104,21 @@ FC: YES: a, h, j, i, f, b, c, d, e, g
 
 BC: no output was returned
 
-*** a bug was discovered! ***
+**a bug was discovered!**
 
 The bug was caused by this horn-clause: e&f => f, which requires f to be proven by itself.
+
 This caused the program to get stuck in an infinite loop as it constantly added and removed f from the queries array-list.
+
 This error was solved by creating a method that checks if a literal has been added before, and if so, ignores it.
+
 With this addition to the program, the new output is:
 
 BC output: YES: j, h, i, f, d, b, a, c, e, g
 
 TT output: YES: 1
 
-* Test Case #7 - using the example from the assignment outline
+### Test Case #7 - using the example from the assignment outline
 TELL
 p2=> p3; p3 => p1; c => e; b&e => f; f&g => h; p1=>d; p1&p3 => c; a; b; p2;
 ASK
