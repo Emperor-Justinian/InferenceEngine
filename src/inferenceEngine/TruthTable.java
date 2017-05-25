@@ -6,7 +6,7 @@ import java.util.Set;
 
 public class TruthTable extends Algorithm {
 	/**
-	 * @author Tim
+	 * @author Timothy Quill
 	 *
 	 */
 	

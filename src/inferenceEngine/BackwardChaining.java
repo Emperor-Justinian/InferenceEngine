@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 public class BackwardChaining extends Algorithm {
 	/**
-	 * @author Tim
+	 * @author Timothy Quill
 	 *
 	 */
 	
