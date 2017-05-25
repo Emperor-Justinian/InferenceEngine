@@ -1,5 +1,5 @@
 # InferenceEngine
-COS30019 - Assignment 2 - Inference Engine
+Swinburne University of Technology - COS30019 (Introduction to Artificial Intelligence) - Assignment 2 - Inference Engine
 
 ## Student Details
 * Andrew Piubellini (9988416)
