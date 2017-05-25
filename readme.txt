@@ -1,9 +1,11 @@
 # InferenceEngine
 Swinburne University of Technology - COS30019 (Introduction to Artificial Intelligence) - Assignment 2 - Inference Engine
 
+Since we used GitHub for collaboration on this project, you can also find it [here](https://github.com/Emperor-Justinian/InferenceEngine).
+
 ## Student Details
-* Andrew Piubellini (9988416)
-* Timothy Quill (100997474)
+* Andrew Piubellini (9988416) a.k.a. "Emperor-Justinian" on GitHub
+* Timothy Quill (100997474) a.k.a. "TimothyQuill" on GitHub
 
 ## Features/Bugs/Missing
 * Forward Chaining - No bugs, program produced the correctly formatted output with all tested examples. 
@@ -119,6 +121,8 @@ Here is a more specific summary of each member's contributions:
 * Tim did online research into how to implement truth tables, forward chaining and backward chaining.
 * Andrew implemented the Main class, the KnowledgeBase and HornClause classes, and the abstract Algorithm class.
 * Tim implemented the TruthTable, ForwardChaining and BackwardChaining classes.
+
+For even more detail, see the commit history on GitHub.
 
 **Andrew's contribution**: 50%
 
