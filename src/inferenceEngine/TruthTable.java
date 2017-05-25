@@ -101,7 +101,7 @@ public class TruthTable extends Algorithm {
 		
 		else
 		{
-			// else output "(Query) could not be proven"
+			// else output "NO: (Query) could not be proven"
 			output = "NO: " + query + " could not be proven.";
 		}
 		
