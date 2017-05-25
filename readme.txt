@@ -104,9 +104,15 @@ TT output: YES: 3
 
 ## Acknowledgements/Resources
 
-* Credit to jonathan-stafford's answer at stackoverflow.com/questions/203984/how-do-i-remove-repeated-elements-from-arraylist for an example of how to use a hash-set to cleanse an array-list of duplicate values. This was useful in the Truth Table class to make sure every variable was included in an array list of variables only once.
+* Credit to [Oracle's Java documentation](https://docs.oracle.com/javase/8/docs/api/java/io/BufferedReader.html) for an example on how to work with FileReaders and BufferedReaders. This was useful in the Main and KnowledgeBase classes.
 
-* Credit to Dhass's answer at careercup.com/question?id=17632666 for an example of how to populate a truth table grid using every possible combination of T and F row each row.
+* Credit to [Kevin Bowersox's StackOverflow answer](https://stackoverflow.com/questions/15633228/how-to-remove-all-white-spaces-in-java) for an example on how to remove whitespace from a string using a regular expression. This was useful when purging whitespace in the KnowledgeBase.readInput(BufferedReader reader) method.
+
+* Credit to [this discussion on StackOverflow](http://stackoverflow.com/questions/207947/how-do-i-get-a-platform-dependent-new-line-character) for suggesting the use of System.lineSeparator() to get platform-specific line separators (i.e. LF on Linux/macOS, CRLF on Windows). This was useful in the KnowledgeBase.toString() method, to prevent cross-platform compatibility issues (since the program was developed on Linux and macOS, but needs to also work on Windows 7).
+
+* Credit to [jonathan-stafford's StackOverflow answer](https://stackoverflow.com/questions/203984/how-do-i-remove-repeated-elements-from-arraylist) for an example of how to use a hash-set to cleanse an array-list of duplicate values. This was useful in the Truth Table class to make sure every variable was included in an array list of variables only once.
+
+* Credit to [Dhass's answer](https://careercup.com/question?id=17632666) for an example of how to populate a truth table grid using every possible combination of T and F row each row.
 
 
 ## Notes
