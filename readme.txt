@@ -114,6 +114,7 @@ TODO
 In general, both Andrew and Tim contributed to most elements of the assignment, but Andrew worked more on the programming side, while Tim worked more on the AI algorithm side.
 
 Here is a more specific summary of each member's contributions:
+
 * Andrew and Tim met in person on several occasions, to discuss how the AI would structure its data, and how the algorithms would be implemented.
 * Tim did online research into how to implement truth tables, forward chaining and backward chaining.
 * Andrew implemented the Main class, the KnowledgeBase and HornClause classes, and the abstract Algorithm class.
