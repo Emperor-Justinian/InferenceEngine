@@ -1,6 +1,8 @@
 package inferenceEngine;
 
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Set;
 
 public class BackwardChaining extends Algorithm {
 	/**
@@ -62,7 +64,7 @@ public class BackwardChaining extends Algorithm {
 		else
 		{
 			// else output "(Query) could not be proven"
-			output = query + " could not be proven.";
+			output = "NO: " + query + " could not be proven.";
 		}
 		return output;		
 	}
@@ -142,6 +144,15 @@ public class BackwardChaining extends Algorithm {
 				}
 			}
 		}
+		
+		// an additional safeguard to  make sure literals aren't explored multiple times
+		// Credit to jonathan-stafford's answer at 
+		// stackoverflow.com/questions/203984/how-do-i-remove-repeated-elements-from-arraylist
+		// for an example of how to use a hash-set to cleanse an array-list of duplicate values
+		Set<String> hs = new HashSet<>();
+		hs.addAll(queries);
+		queries.clear();
+		queries.addAll(hs);
 		
 		return result;
 	}
